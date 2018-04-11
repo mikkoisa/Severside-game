@@ -1,0 +1,23 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+
+  form( method='POST' action='/users' name='editName')
+    input(type='number', name = 'id' placeholder='UserId')
+    input(type='text', name = 'newName' placeholder='New Name')
+    button(type='submit') Edit name
+
+  form(name='editName')
+    input#namer(type='text', name = 'name' placeholder='Name')
+    input#ager(type='number', name = 'age' placeholder='Age')
+    button#sender((click)='putUser()') Create new user
+
+  button#lister() List users
+  button#deleter() Delete last user
+
+  p#list
+
+  script(src= '/javascripts/sender.js')
+  
