@@ -1,0 +1,9 @@
+extends layout
+
+block content
+  p#roomId #{roomId}
+  button#send Send data
+
+  script(src='/socket.io/socket.io.js')
+  script(src='/javascripts/player.js')
+  

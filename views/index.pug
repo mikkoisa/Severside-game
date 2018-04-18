@@ -3,21 +3,14 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
+  button#create Create Room
+  br
+  br
+  input#roominput(placeholder= 'Enter room to join')
+  br
+  button#join Join Room
 
-  form( method='POST' action='/users' name='editName')
-    input(type='number', name = 'id' placeholder='UserId')
-    input(type='text', name = 'newName' placeholder='New Name')
-    button(type='submit') Edit name
+  script(src='/javascripts/lobby.js')
+  include includes/scripts
 
-  form(name='editName')
-    input#namer(type='text', name = 'name' placeholder='Name')
-    input#ager(type='number', name = 'age' placeholder='Age')
-    button#sender((click)='putUser()') Create new user
-
-  button#lister() List users
-  button#deleter() Delete last user
-
-  p#list
-
-  script(src= '/javascripts/sender.js')
   
