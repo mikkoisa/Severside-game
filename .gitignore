@@ -4,3 +4,6 @@ build
 npm-debug-log
 .DS_Store
 .eslintrc.js
+certrequest.csr
+ssl-cert.pem
+ssl-key.pem

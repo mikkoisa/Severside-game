@@ -3,7 +3,12 @@ extends layout
 block content
   p#room Gameroom
   p#screen
+  br
+  br
 
-  script(src='/socket.io/socket.io.js')
+  canvas#canvas(width="480" height="320")
+  br
+
+  include includes/scripts
   script(src='/javascripts/game.js')
   

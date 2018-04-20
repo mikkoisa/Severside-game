@@ -11,11 +11,36 @@ socket.on('disconnect', () => {
 
 socket.on('closeRoom', (msg) => {
     console.log(msg)
-    // TODO: Add popup before redirecting 
-    window.location.href = '/'
+    $('#myModal').modal()
 });
 
 const btnSend = document.querySelector('#send')
 btnSend.addEventListener('click', evt => {
     // send data to the room 'host'
 });
+
+$('#myModal').on('hidden.bs.modal', () => {
+    window.location.href = '/'
+})
+
+// Test game commands
+
+const move = (direction) => {
+    socket.emit('move object', direction)
+}
+
+/* const moveup = () => {
+    socket.emit('move object', 'up')
+}
+
+const movedown = () => {
+    socket.emit('move object', 'down')
+}
+
+const moveleft = () => {
+    socket.emit('move object', 'left')
+}
+
+const moveright = () => {
+    socket.emit('move object', 'right')
+} */

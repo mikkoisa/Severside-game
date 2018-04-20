@@ -53,6 +53,7 @@ app.use((err, req, res, next) => {
     res.render('error');
 });
 
+// Socket.io functions
 io.on('connection', socket => {
     let room = ''
     let host = ''
@@ -75,8 +76,7 @@ io.on('connection', socket => {
             if (io.sockets.adapter.rooms[room]) {
                 socket.broadcast.to(room).emit('updatePlayers', io.sockets.adapter.rooms[room].sockets)
             }
-        }
-        
+        }   
     });
 
     socket.on('join', (huone) => {
@@ -89,6 +89,8 @@ io.on('connection', socket => {
         }
     });
 
+    socket.on('move object', (direction) => {
+        socket.broadcast.to(room).emit("move object", direction);
+    });
+
 });
-
-

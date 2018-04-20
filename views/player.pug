@@ -3,7 +3,23 @@ extends layout
 block content
   p#roomId #{roomId}
   button#send Send data
+  br
+  br
 
-  script(src='/socket.io/socket.io.js')
+  button(onclick="move('up')") UP
+  br
+  button(onclick="move('left')") LEFT
+  button(onclick="move('right')") RIGHT
+  br
+  button(onclick="move('down')") DOWN
+
+  #myModal.modal.fade(role='dialog')
+    .modal-dialog
+      .modal-content
+        .modal-body
+          p The room has been closed
+          button( data-dismiss= 'modal' aria-label= 'Close') Close
+  
+  include includes/scripts
   script(src='/javascripts/player.js')
   

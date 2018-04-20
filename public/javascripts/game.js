@@ -34,3 +34,69 @@ socket.on('updatePlayers', msg => {
     }
     
 });
+
+
+// Some test game commands
+
+const canvas = document.getElementById("canvas");
+
+const ctx = canvas.getContext("2d");
+
+let x = canvas.width / 2;
+let y = canvas.height - 30;
+const dx = 2;
+const dy = -2;
+const speedX = 0;
+const speedY = 0;
+
+const drawBall = () => {
+    ctx.beginPath();
+    ctx.arc(x, y, 10, 0, Math.PI * 2);
+    ctx.fillStyle = "#0095DD";
+    ctx.fill();
+    ctx.closePath();
+}
+
+const draw = (unit, value) => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (unit == y) {
+        y += value
+    } else {
+        x += value
+    }
+    drawBall();
+    
+}
+
+
+/* const moveup = () => {
+    draw(y, -5); 
+}
+
+const movedown = () => {
+    draw(y, 5); 
+    // myGamePiece.speedY += 1; 
+}
+
+const moveleft = () => {
+    draw(x, -5); 
+    // myGamePiece.speedX -= 1;
+}
+
+const moveright = () => {
+    draw(x, 5); 
+   // myGamePiece.speedX += 1;
+} */
+
+socket.on('move object', (direction) => {
+    if (direction == 'up') {
+        draw(y, -5);
+    } else if (direction == 'down') {
+        draw(y, 5);
+    } else if (direction == 'left') {
+        draw(x, -5);   
+    } else if (direction == 'right') {
+        draw(x, 5);
+    }
+});
+
