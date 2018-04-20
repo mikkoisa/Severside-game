@@ -43,7 +43,7 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 let x = canvas.width / 2;
-let y = canvas.height - 30;
+let y = canvas.height / 2;
 const dx = 2;
 const dy = -2;
 const speedX = 0;
@@ -53,17 +53,19 @@ const drawBall = () => {
     ctx.beginPath();
     ctx.arc(x, y, 10, 0, Math.PI * 2);
     ctx.fillStyle = "#0095DD";
-    ctx.fill();
     ctx.closePath();
+    ctx.fill();
+    
 }
 
 const draw = (unit, value) => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    if (unit == y) {
+    if (unit == 'y') {
         y += value
-    } else {
+    } else if (unit == 'x') {
         x += value
     }
+    console.log(unit + ' : ' + value);
     drawBall();
     
 }
@@ -90,13 +92,13 @@ const moveright = () => {
 
 socket.on('move object', (direction) => {
     if (direction == 'up') {
-        draw(y, -5);
+        draw('y', -1);
     } else if (direction == 'down') {
-        draw(y, 5);
+        draw('y', 1);
     } else if (direction == 'left') {
-        draw(x, -5);   
+        draw('x', -1);   
     } else if (direction == 'right') {
-        draw(x, 5);
+        draw('x', 1);
     }
 });
 

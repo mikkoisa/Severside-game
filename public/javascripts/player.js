@@ -1,4 +1,5 @@
 const socket = io.connect('https://localhost:3000');
+let moveInterval = '';
 
 socket.on('connect', () => {
     socket.emit('join', document.getElementById('roomId').innerHTML)
@@ -26,8 +27,16 @@ $('#myModal').on('hidden.bs.modal', () => {
 // Test game commands
 
 const move = (direction) => {
-    socket.emit('move object', direction)
+    console.log('moving' + direction)
+    moveInterval = setInterval(() => {
+        socket.emit('move object', direction)
+    }, 10);
 }
+
+window.addEventListener('mouseup', (event) => {
+    clearInterval(moveInterval);
+})
+
 
 /* const moveup = () => {
     socket.emit('move object', 'up')

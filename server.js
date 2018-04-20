@@ -90,6 +90,7 @@ io.on('connection', socket => {
     });
 
     socket.on('move object', (direction) => {
+        console.log('moving' + direction)
         socket.broadcast.to(room).emit("move object", direction);
     });
 
