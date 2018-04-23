@@ -6,12 +6,12 @@ block content
   br
 
   .row
-    button.col-md-2.offset-md-5(onmousedown="move('up')") UP
+    button.col-md-2.offset-md-5(onmousedown="move('up')" touchstart="move('up')") UP
   .row
-    button.col-md-3.offset-md-3(onmousedown="move('left')") LEFT
-    button.col-md-3(onmousedown="move('right')") RIGHT
+    button.col-md-3.offset-md-3(onmousedown="move('left')" touchstart="move('left')") LEFT
+    button.col-md-3(onmousedown="move('right')" touchstart="move('right')") RIGHT
   .row
-    button.col-md-2.offset-md-5(onmousedown="move('down')") DOWN
+    button.col-md-2.offset-md-5(onmousedown="move('down')" touchstart="move('down')") DOWN
 
   #myModal.modal.fade(role='dialog')
     .modal-dialog
