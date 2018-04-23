@@ -4,7 +4,9 @@ const https = require('https');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const dotenv = require('dotenv').config()
 const app = express();
+
 
 const randomstring = require("randomstring");
 
@@ -12,15 +14,36 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 
 const fs = require('fs');
-const sslkey = fs.readFileSync('ssl-key.pem');
-const sslcert = fs.readFileSync('ssl-cert.pem')
+let server = ''
+app.enable('trust proxy');
+console.log(process.env.MODE)
 
-const options = {
-    "key": sslkey,
-    "cert": sslcert
-};
+if (process.env.MODE == 'local') {
+    const sslkey = fs.readFileSync('ssl-key.pem');
+    const sslcert = fs.readFileSync('ssl-cert.pem')
 
-const server = https.createServer(options, app).listen(3000);
+    const options = {
+        "key": sslkey,  
+        "cert": sslcert
+    };
+    server = https.createServer(options, app).listen(3000);
+    
+} else if (process.env.MODE == 'cloud') {
+    server = app.listen(3000);
+}
+
+
+app.use((req, res, next) => {
+    if (req.secure) {
+      // request was via https, so do no special handling
+        next();
+    } else {
+      // request was via http, so redirect to https
+        res.redirect('https://' + req.headers.host + req.url);
+    }
+});
+  
+
 const io = require('socket.io').listen(server);
 
 // view engine setup

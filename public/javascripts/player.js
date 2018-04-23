@@ -1,4 +1,6 @@
-const socket = io.connect('https://localhost:3000');
+// const socket = io.connect('https://localhost:3000');
+const socket = io.connect('https://bestgame.jelastic.metropolia.fi');
+
 let moveInterval = '';
 
 socket.on('connect', () => {
