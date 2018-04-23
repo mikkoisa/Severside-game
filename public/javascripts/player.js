@@ -17,26 +17,31 @@ socket.on('closeRoom', (msg) => {
     $('#myModal').modal()
 });
 
-const btnSend = document.querySelector('#send')
-btnSend.addEventListener('click', evt => {
-    // send data to the room 'host'
-});
-
 $('#myModal').on('hidden.bs.modal', () => {
     window.location.href = '/'
 })
 
 // Test game commands
 
+let slow = 0
+
 const move = (direction) => {
     console.log('moving' + direction)
     moveInterval = setInterval(() => {
-        socket.emit('move object', direction)
+        console.log(slow)
+        socket.emit('move object', direction, slow)
     }, 10);
 }
 
 window.addEventListener('mouseup', (event) => {
     clearInterval(moveInterval);
+    slow = 0
+    // slow = 2;
+    /* setTimeout(() => {
+        console.log('clear')
+        
+        slow = 0;
+    }, 500) */
 })
 
 

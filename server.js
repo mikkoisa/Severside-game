@@ -112,9 +112,9 @@ io.on('connection', socket => {
         }
     });
 
-    socket.on('move object', (direction) => {
+    socket.on('move object', (direction, slow) => {
         console.log('moving' + direction)
-        socket.broadcast.to(room).emit("move object", direction);
+        socket.broadcast.to(room).emit("move object", direction, slow);
     });
 
 });

@@ -2,16 +2,16 @@ extends layout
 
 block content
   p#roomId #{roomId}
-  button#send Send data
   br
   br
 
-  button(onmousedown="move('up')") UP
-  br
-  button(onmousedown="move('left')") LEFT
-  button(onmousedown="move('right')") RIGHT
-  br
-  button(onmousedown="move('down')") DOWN
+  .row
+    button.col-md-2.offset-md-5(onmousedown="move('up')") UP
+  .row
+    button.col-md-3.offset-md-3(onmousedown="move('left')") LEFT
+    button.col-md-3(onmousedown="move('right')") RIGHT
+  .row
+    button.col-md-2.offset-md-5(onmousedown="move('down')") DOWN
 
   #myModal.modal.fade(role='dialog')
     .modal-dialog

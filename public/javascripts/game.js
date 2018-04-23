@@ -58,12 +58,22 @@ const drawBall = () => {
     
 }
 
-const draw = (unit, value) => {
+const draw = (unit, value, slow) => {
+    console.log(slow)
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     if (unit == 'y') {
-        y += value
+        if (slow == 0) {
+            y += value
+        } else {
+            y += value / slow
+        }
+       
     } else if (unit == 'x') {
-        x += value
+        if (slow == 0) {
+            x += value
+        } else {
+            x += value / slow
+        }
     }
     console.log(unit + ' : ' + value);
     drawBall();
@@ -90,15 +100,15 @@ const moveright = () => {
    // myGamePiece.speedX += 1;
 } */
 
-socket.on('move object', (direction) => {
+socket.on('move object', (direction, slow) => {
     if (direction == 'up') {
-        draw('y', -1);
+        draw('y', -1, slow);
     } else if (direction == 'down') {
-        draw('y', 1);
+        draw('y', 1, slow);
     } else if (direction == 'left') {
-        draw('x', -1);   
+        draw('x', -1, slow);   
     } else if (direction == 'right') {
-        draw('x', 1);
+        draw('x', 1, slow);
     }
 });
 
