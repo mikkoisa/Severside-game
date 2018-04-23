@@ -44,6 +44,17 @@ window.addEventListener('mouseup', (event) => {
     }, 500) */
 })
 
+window.addEventListener('touchend', (event) => {
+    clearInterval(moveInterval);
+    slow = 0
+    // slow = 2;
+    /* setTimeout(() => {
+        console.log('clear')
+        
+        slow = 0;
+    }, 500) */
+})
+
 
 /* const moveup = () => {
     socket.emit('move object', 'up')
