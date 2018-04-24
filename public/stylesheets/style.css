@@ -1,6 +1,7 @@
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+
 }
 
 a {
@@ -10,4 +11,14 @@ a {
 canvas {
   border: 1px solid #000000;
   background-color: #f1f1f1;
+}
+
+.row {
+
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+#content {
+  border: 1px solid #000000;
 }

@@ -1,18 +1,18 @@
 extends layout
 
 block content
-  span.col
-  div.col
-    h1= title
-    p Welcome to #{title}
-    button#create Create Room
-    br
-    br
-    input#roominput(placeholder= 'Enter room to join')
-    br
-    button#join Join Room
+  
+  .container#content
+    .row
+      h1.col-12.text-center= title
+      p.col-12.text-center Welcome to #{title}
+    .row
+      button.mx-auto.col-6.col-md-3#create Create Room
+    .row
+      input.mx-auto#roominput(placeholder= 'Enter room to join')
+    .row.col-6.col-md-2.offset-5
+      button.col#join Join Room
 
     script(src='/javascripts/lobby.js')
     include includes/scripts
-  span.col
   
