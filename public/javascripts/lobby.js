@@ -6,6 +6,10 @@ btnCreate.addEventListener('click', evt => {
 
 const btnJoin = document.querySelector('#join')
 btnJoin.addEventListener('click', evt => {
-    // socket.emit('join');
-    window.location.href = '/player/' + document.getElementById('roominput').value
+    $('#joinModal').modal()
 })
+
+const confirm = () => {
+    console.log('clickk')
+    window.location.href = '/player/' + document.getElementById('roominput').value
+}

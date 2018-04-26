@@ -1,18 +1,29 @@
 extends layout
 
 block content
-  
-  .container#content
-    .row
-      h1.col-12.text-center= title
-      p.col-12.text-center Welcome to #{title}
-    .row
-      button.mx-auto.col-6.col-md-3#create Create Room
-    .row
-      input.mx-auto#roominput(placeholder= 'Enter room to join')
-    .row.col-6.col-md-2.offset-5
-      button.col#join Join Room
+  div#frame  
+    .container#content
+      .row
+        h1.col-12.text-center= title
+        p.col-12.text-center Welcome to #{title}
+      .row.mx-auto.col-6.col-md-4.offset-md-4
+        button.btn.btn-dark.col#create Create Room
+      //-.row
+        //- input.mx-auto#roominput(placeholder= 'Enter room to join')
+      .row.mx-auto.col-6.col-md-4.offset-md-4
+        button.btn.btn-dark.col#join Join Room
 
-    script(src='/javascripts/lobby.js')
-    include includes/scripts
+    #joinModal.modal.fade(role='dialog')
+      .modal-dialog.modal-dialog-centered
+        .modal-content
+          .modal-body.mx-auto
+            h3.col.text-center Enter room password
+            input.col.input-group-text.mx-auto#roominput
+            button.col.mx-auto.btn.btn-dark#confirm(type='button' onclick='confirm()') Join
+
+  script(src="https://code.jquery.com/jquery-1.10.2.js")
+  script(src="https://code.jquery.com/ui/1.11.2/jquery-ui.js")
+  script(src='/javascripts/lobby.js')
+  script(src='/socket.io/socket.io.js')
+  script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js") 
   

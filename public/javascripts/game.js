@@ -51,7 +51,7 @@ const speedY = 0;
 
 const drawBall = () => {
     ctx.beginPath();
-    ctx.arc(x, y, 10, 0, Math.PI * 2);
+    ctx.arc(x, y, 2, 0, Math.PI * 2);
     ctx.fillStyle = "#0095DD";
     ctx.closePath();
     ctx.fill();

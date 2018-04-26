@@ -1,14 +1,10 @@
 extends layout
 
 block content
-  p#room Gameroom
-  p#screen
-  br
-  br
-
-  canvas#canvas(width="480" height="480")
-  br
-
-  include includes/scripts
-  script(src='/javascripts/game.js')
+  .container#gameContent
+    p.col#room Gameroom
+    p.col#screen
+    canvas.col#canvas
+    include includes/scripts
+    script(src='/javascripts/game.js')
   
