@@ -30,7 +30,7 @@ const move = (direction) => {
     moveInterval = setInterval(() => {
         console.log(slow)
         socket.emit('move object', direction, slow)
-    }, 50);
+    }, 1000 / 60);
 }
 
 window.addEventListener('mouseup', (event) => {
