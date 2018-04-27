@@ -1,5 +1,5 @@
-const socket = io.connect('https://localhost:3000');
-// const socket = io.connect('https://bestgame.jelastic.metropolia.fi');
+// const socket = io.connect('https://localhost:3000');
+const socket = io.connect('https://bestgame.jelastic.metropolia.fi');
 
 let moveInterval = '';
 
@@ -30,7 +30,7 @@ const move = (direction) => {
     moveInterval = setInterval(() => {
         console.log(slow)
         socket.emit('move object', direction, slow)
-    }, 10);
+    }, 50);
 }
 
 window.addEventListener('mouseup', (event) => {

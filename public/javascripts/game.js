@@ -1,5 +1,5 @@
-const socket = io.connect('https://localhost:3000');
-// const socket = io.connect('https://bestgame.jelastic.metropolia.fi');
+// const socket = io.connect('https://localhost:3000');
+const socket = io.connect('https://bestgame.jelastic.metropolia.fi');
 socket.emit('create');
 
 socket.on('connect', () => {
