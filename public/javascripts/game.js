@@ -50,12 +50,17 @@ const speedX = 0;
 const speedY = 0;
 
 const drawBall = () => {
-    ctx.beginPath();
+    /* ctx.beginPath();
     ctx.arc(x, y, 2, 0, Math.PI * 2);
     ctx.fillStyle = "#0095DD";
     ctx.closePath();
-    ctx.fill();
-    
+    ctx.fill(); */
+
+    const circle = new Path2D();
+    circle.moveTo(x, y);
+    circle.arc(x, y, 2, 0, Math.PI * 2);
+    circle.closePath();
+    ctx.fill(circle);
 }
 
 const draw = (unit, value, slow) => {

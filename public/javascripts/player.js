@@ -31,7 +31,36 @@ const move = (direction) => {
         console.log(slow)
         socket.emit('move object', direction, slow)
     }, 1000 / 60);
-}
+} 
+ 
+
+/* window.addEventListener('keydown', (event) => {
+    console.log('keydown')
+    const key = event.keyCode;
+    let direction = '';
+    if (key == 37) {
+        direction = 'left'
+    } else if (key == 38) {
+        direction = 'up'
+    } else if (key == 39) {
+        direction = 'right'
+    } else if (key == 40) {
+        direction = 'down'
+    }
+    move(direction)
+});
+
+window.addEventListener('keyup', (event) => {
+    clearInterval(moveInterval);
+}); */
+
+$('button').on('mousedown mouseup', (e) => {
+    if (e.type == 'mousedown') {
+        socket.emit('move object', e.currentTarget.attributes[1], slow)
+    } else if (e.type == 'mouseup') {
+        console.log('end hold')
+    }
+});
 
 window.addEventListener('mouseup', (event) => {
     clearInterval(moveInterval);
