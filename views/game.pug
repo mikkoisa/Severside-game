@@ -4,7 +4,9 @@ block content
   .container#gameContent
     p.col#room Gameroom
     p.col#screen
-    canvas.col#canvas
+    //-canvas.col#canvas
+    svg.col#canvas
+      circle
     include includes/scripts
     script(src='/javascripts/game.js')
   

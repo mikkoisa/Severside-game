@@ -1,5 +1,5 @@
-// const socket = io.connect('https://localhost:3000');
-const socket = io.connect('https://bestgame.jelastic.metropolia.fi');
+const socket = io.connect('https://localhost:3000');
+// const socket = io.connect('https://bestgame.jelastic.metropolia.fi');
 
 let moveInterval = '';
 
@@ -26,11 +26,11 @@ $('#myModal').on('hidden.bs.modal', () => {
 let slow = 0
 
 const move = (direction) => {
-    console.log('moving' + direction)
+    /* console.log('moving' + direction)
     moveInterval = setInterval(() => {
         console.log(slow)
         socket.emit('move object', direction, slow)
-    }, 1000 / 60);
+    }, 1000 / 60); */
 } 
  
 
@@ -56,9 +56,24 @@ window.addEventListener('keyup', (event) => {
 
 $('button').on('mousedown mouseup', (e) => {
     if (e.type == 'mousedown') {
-        socket.emit('move object', e.currentTarget.attributes[1], slow)
+
+        /* d3.select('p').transition().
+        duration(2000).
+        style('background-color', 'red')
+        attr('height', 250) */
+
+        /* moveInterval = setInterval(() => {
+            console.log(slow)
+            socket.emit('move object', e.currentTarget.id, slow)
+        }, 1000 / 60); */
+
+        socket.emit('move object', e.currentTarget.id, slow)
+
+
     } else if (e.type == 'mouseup') {
         console.log('end hold')
+        // clearInterval(moveInterval);
+        socket.emit('stop object')
     }
 });
 
@@ -83,6 +98,20 @@ window.addEventListener('touchend', (event) => {
         slow = 0;
     }, 500) */
 })
+
+
+// Svg test 
+
+const svgContainer = d3.select("body").append("svg").
+    attr("width", 200).
+    attr("height", 200).
+    style("border", "1px solid black").
+    style('background-color', 'white').
+    append("circle").
+    attr("cx", äx).
+    attr("cy", 25).
+    attr("r", 25).
+    style("fill", "purple");
 
 
 /* const moveup = () => {

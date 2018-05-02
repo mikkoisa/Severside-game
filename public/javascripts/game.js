@@ -1,5 +1,5 @@
-// const socket = io.connect('https://localhost:3000');
-const socket = io.connect('https://bestgame.jelastic.metropolia.fi');
+const socket = io.connect('https://localhost:3000');
+// const socket = io.connect('https://bestgame.jelastic.metropolia.fi');
 socket.emit('create');
 
 socket.on('connect', () => {
@@ -38,16 +38,21 @@ socket.on('updatePlayers', msg => {
 
 // Some test game commands
 
-const canvas = document.getElementById("canvas");
+// const canvas = document.getElementById('canvas');
+const canvas = d3.select('svg')
 
-const ctx = canvas.getContext("2d");
+// const ctx = canvas.getContext("2d");
 
-let x = canvas.width / 2;
-let y = canvas.height / 2;
+let x = canvas._groups["0"]["0"].clientWidth
+let y = canvas._groups["0"]["0"].clientHeight
+
+let moveInterval = ''
+
 const dx = 2;
 const dy = -2;
 const speedX = 0;
 const speedY = 0;
+
 
 const drawBall = () => {
     /* ctx.beginPath();
@@ -64,8 +69,8 @@ const drawBall = () => {
 }
 
 const draw = (unit, value, slow) => {
-    console.log(slow)
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    console.log(canvas);
+    /* ctx.clearRect(0, 0, canvas.width, canvas.height);
     if (unit == 'y') {
         if (slow == 0) {
             y += value
@@ -81,7 +86,24 @@ const draw = (unit, value, slow) => {
         }
     }
     console.log(unit + ' : ' + value);
-    drawBall();
+    drawBall(); */
+
+    const player = d3.select("circle").
+    attr("cx", x).
+    attr("cy", y).
+    attr("r", 25).
+    style("fill", "purple");
+
+    if (unit == 'y') {
+        moveInterval = setInterval(() => {
+            player.attr('cy', y += value)
+        }, 1000 / 60);
+       
+    } else if (unit == 'x') {
+        moveInterval = setInterval(() => {
+            player.attr('cx', x += value)
+        }, 1000 / 60);
+    }
     
 }
 
@@ -106,6 +128,7 @@ const moveright = () => {
 } */
 
 socket.on('move object', (direction, slow) => {
+    console.log('moving to: ' + direction)
     if (direction == 'up') {
         draw('y', -1, slow);
     } else if (direction == 'down') {
@@ -117,3 +140,6 @@ socket.on('move object', (direction, slow) => {
     }
 });
 
+socket.on('stop object', (direction, slow) => {
+    clearInterval(moveInterval);
+}); 

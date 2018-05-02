@@ -6,11 +6,11 @@ block content
       .row
         h1.col-12.text-center= title
         p.col-12.text-center Welcome to #{title}
-      .row.mx-auto.col-6.col-md-4.offset-md-4
+      .row.mx-auto.col-sm-6.col-md-4.offset-md-4
         button.btn.btn-dark.col#create Create Room
       //-.row
         //- input.mx-auto#roominput(placeholder= 'Enter room to join')
-      .row.mx-auto.col-6.col-md-4.offset-md-4
+      .row.mx-auto.col-sm-6.col-md-4.offset-md-4
         button.btn.btn-dark.col#join Join Room
 
     #joinModal.modal.fade(role='dialog')
@@ -25,5 +25,6 @@ block content
   script(src="https://code.jquery.com/ui/1.11.2/jquery-ui.js")
   script(src='/javascripts/lobby.js')
   script(src='/socket.io/socket.io.js')
+  script(src="https://d3js.org/d3.v5.min.js")
   script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js") 
   

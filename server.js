@@ -118,6 +118,10 @@ io.on('connection', socket => {
         socket.broadcast.to(room).emit("move object", direction, slow);
     });
 
+    socket.on('stop object', () => {
+        socket.broadcast.to(room).emit("stop object");
+    });
+
 });
 
 DB.connect('mongodb://' + process.env.DB_HOST + ':27017/scores', app);

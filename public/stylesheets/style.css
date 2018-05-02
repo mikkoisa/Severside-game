@@ -49,3 +49,8 @@ button {
   width: 100%;
   height: 40vw;
 }
+
+#up, #down, #left, #right {
+  background-color: Transparent;
+  border: transparent;
+}
