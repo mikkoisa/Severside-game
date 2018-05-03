@@ -118,8 +118,8 @@ io.on('connection', socket => {
         socket.broadcast.to(room).emit("move object", direction, slow);
     });
 
-    socket.on('stop object', () => {
-        socket.broadcast.to(room).emit("stop object");
+    socket.on('stop object', (direction) => {
+        socket.broadcast.to(room).emit("stop object", direction);
     });
 
 });

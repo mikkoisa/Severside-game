@@ -21,18 +21,17 @@ socket.on('updatePlayers', msg => {
     }
 
     const players = [];
-    for (player in msg) {
-        players.push(player);
+    for (playa in msg) {
+        players.push(playa);
     }
     players.splice(0, 1);
 
-    for (player in players) {
+    for (playa in players) {
         const massage = document.createElement("p");
-        massage.innerHTML = players[player];
-        massage.id = player;        
+        massage.innerHTML = players[playa];
+        massage.id = playa;        
         screen.appendChild(massage)
     }
-    
 });
 
 
@@ -43,8 +42,8 @@ const canvas = d3.select('svg')
 
 // const ctx = canvas.getContext("2d");
 
-let x = canvas._groups["0"]["0"].clientWidth
-let y = canvas._groups["0"]["0"].clientHeight
+let x = canvas._groups["0"]["0"].clientWidth / 2;
+let y = canvas._groups["0"]["0"].clientHeight / 2;
 
 let moveInterval = ''
 
@@ -53,6 +52,34 @@ const dy = -2;
 const speedX = 0;
 const speedY = 0;
 
+let pressUp = false;
+let pressDown = false;
+let pressLeft = false;
+let pressRight = false;
+
+const player = d3.select("circle").
+    attr("cx", x).
+    attr("cy", y).
+    attr("r", 15).
+    style("fill", "purple");
+
+setInterval(() => {
+    if (pressUp) {
+        player.attr('cy', y -= 2)
+    } 
+    
+    if (pressDown) {
+        player.attr('cy', y += 2)
+    }
+
+    if (pressLeft) {
+        player.attr('cx', x -= 2)
+    }
+
+    if (pressRight) {
+        player.attr('cx', x += 2)
+    }
+}, 1000 / 60);
 
 const drawBall = () => {
     /* ctx.beginPath();
@@ -88,13 +115,24 @@ const draw = (unit, value, slow) => {
     console.log(unit + ' : ' + value);
     drawBall(); */
 
-    const player = d3.select("circle").
-    attr("cx", x).
-    attr("cy", y).
-    attr("r", 25).
-    style("fill", "purple");
+    moveInterval = setInterval(() => {
 
-    if (unit == 'y') {
+        if (pressUp && !pressDown && !pressLeft && !pressRight) {
+            console.log('up: ' + pressUp + pressDown + pressLeft + pressRight)
+            player.attr('cy', y -= 2)
+        } else if (!pressUp && pressDown && !pressLeft && !pressRight) {
+            console.log('down: ' + pressUp + pressDown + pressLeft + pressRight)
+            player.attr('cy', y += 2)
+        } else if (!pressUp && !pressDown && pressLeft && !pressRight) {
+            console.log('left: ' + pressUp + pressDown + pressLeft + pressRight)
+            player.attr('cx', x -= 2)
+        } else if (!pressUp && !pressDown && !pressLeft && pressRight) {
+            console.log('right: ' + pressUp + pressDown + pressLeft + pressRight)
+            player.attr('cx', x += 2)
+        }
+    }, 1000 / 60);
+
+    /* if (unit == 'y') {
         moveInterval = setInterval(() => {
             player.attr('cy', y += value)
         }, 1000 / 60);
@@ -103,7 +141,7 @@ const draw = (unit, value, slow) => {
         moveInterval = setInterval(() => {
             player.attr('cx', x += value)
         }, 1000 / 60);
-    }
+    } */
     
 }
 
@@ -128,18 +166,33 @@ const moveright = () => {
 } */
 
 socket.on('move object', (direction, slow) => {
-    console.log('moving to: ' + direction)
     if (direction == 'up') {
-        draw('y', -1, slow);
+        pressUp = true;
+        // draw('y', -1, slow);
     } else if (direction == 'down') {
-        draw('y', 1, slow);
+        pressDown = true;
+        // draw('y', 1, slow);
     } else if (direction == 'left') {
-        draw('x', -1, slow);   
+        pressLeft = true;
+        // draw('x', -1, slow);   
     } else if (direction == 'right') {
-        draw('x', 1, slow);
+        pressRight = true;
+        // draw('x', 1, slow);
     }
 });
 
 socket.on('stop object', (direction, slow) => {
-    clearInterval(moveInterval);
+    if (direction == 'up') {
+        pressUp = false;
+    } else if (direction == 'down') {
+        pressDown = false;
+    } else if (direction == 'left') {
+        pressLeft = false;  
+    } else if (direction == 'right') {
+        pressRight = false;
+    }
+    if (pressDown == false && pressUp == false && pressLeft == false && pressRight == false) {
+        clearInterval(moveInterval); 
+        moveInterval = '';
+    }
 }); 

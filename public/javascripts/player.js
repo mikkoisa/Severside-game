@@ -1,7 +1,6 @@
 const socket = io.connect('https://localhost:3000');
 // const socket = io.connect('https://bestgame.jelastic.metropolia.fi');
 
-let moveInterval = '';
 
 socket.on('connect', () => {
     socket.emit('join', document.getElementById('roomId').innerHTML)
@@ -73,7 +72,7 @@ $('button').on('mousedown mouseup', (e) => {
     } else if (e.type == 'mouseup') {
         console.log('end hold')
         // clearInterval(moveInterval);
-        socket.emit('stop object')
+        socket.emit('stop object', e.currentTarget.id)
     }
 });
 
