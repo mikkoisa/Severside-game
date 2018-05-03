@@ -143,7 +143,7 @@ const draw = (unit, value, slow) => {
         }, 1000 / 60);
     } */
     
-}
+} 
 
 
 /* const moveup = () => {
