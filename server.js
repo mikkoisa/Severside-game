@@ -113,9 +113,18 @@ io.on('connection', socket => {
         }
     });
 
-    socket.on('move object', (direction, slow) => {
+    socket.on('listUsers', (huone) => {
+        console.log('sending list: ' + huone)
+        socket.broadcast.to(huone).emit('listPlayers', io.sockets.adapter.rooms[room].sockets);
+    });
+
+    socket.on('start game', () => {
+        socket.broadcast.to(room).emit('start game', io.sockets.adapter.rooms[room].sockets);
+    });
+
+    socket.on('move object', (direction) => {
         console.log('moving' + direction)
-        socket.broadcast.to(room).emit("move object", direction, slow);
+        socket.broadcast.to(room).emit("move object", direction);
     });
 
     socket.on('stop object', (direction) => {

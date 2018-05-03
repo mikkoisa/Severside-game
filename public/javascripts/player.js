@@ -1,38 +1,66 @@
 const socket = io.connect('https://localhost:3000');
 // const socket = io.connect('https://bestgame.jelastic.metropolia.fi');
 
+const playerList = d3.select('#playerList');
+
+socket.emit('listUsers', document.getElementById('roomId').innerHTML);
+
+// Check which controls to display
+
+$('#startGame').on('click touchstart', (e) => {
+    document.getElementById('content').style.display = 'none'
+
+    socket.emit('start game');
+    
+    // Check which game this is
+    if (document.getElementById('game').innerHTML == 'Game 1') {
+        document.getElementById('game1Controls').style.display = 'initial';
+    }
+
+});
 
 socket.on('connect', () => {
     socket.emit('join', document.getElementById('roomId').innerHTML)
 });
 
 socket.on('disconnect', () => {
-    console.log("user left")
     socket.emit('messageleave')
 });
 
 socket.on('closeRoom', (msg) => {
-    console.log(msg)
     $('#myModal').modal()
 });
+
+/*
+socket.on('listPlayers', msg => {
+    console.log('whaaaattttttttttttttttttttt')
+    const screen = document.getElementById('playerList'); 
+    while (screen.hasChildNodes()) {   
+        screen.removeChild(screen.firstChild);
+    }
+
+    const players = [];
+    for (playa in msg) {
+        players.push(playa);
+    }
+    players.splice(0, 1);
+
+    for (playa in players) {
+        const massage = document.createElement('li');
+        massage.innerHTML = players[playa];
+        massage.id = playa;        
+        screen.appendChild(massage)
+    }
+}); */
 
 $('#myModal').on('hidden.bs.modal', () => {
     window.location.href = '/'
 })
 
-// Test game commands
 
-const move = (direction) => {
-    /* console.log('moving' + direction)
-    moveInterval = setInterval(() => {
-        console.log(slow)
-        socket.emit('move object', direction, slow)
-    }, 1000 / 60); */
-} 
- 
+// Game1 commands
 
-window.addEventListener('keydown', (event) => {
-    console.log('keydown')
+/* window.addEventListener('keydown', (event) => {
     const key = event.keyCode;
     let direction = '';
     if (key == 37) {
@@ -46,7 +74,7 @@ window.addEventListener('keydown', (event) => {
     }
     socket.emit('move object', direction)
 
-});
+}); 
 
 window.addEventListener('keyup', (event) => {
     const key = event.keyCode;
@@ -61,52 +89,17 @@ window.addEventListener('keyup', (event) => {
         direction = 'down'
     }
     socket.emit('stop object', direction)
-});
+}); */
 
-$('button').on('mousedown mouseup touchstart touchend', (e) => {
+$('.mover').on('mousedown mouseup touchstart touchend', (e) => {
     if (e.type == 'mousedown' || e.type == 'touchstart') {
-        console.log(e.type)
-        socket.emit('move object', e.currentTarget.id, slow)
+        socket.emit('move object', e.currentTarget.id)
 
     } else if (e.type == 'mouseup' || e.type == 'touchend') {
         socket.emit('stop object', e.currentTarget.id)
     }
 });
 
-window.addEventListener('mouseup', (event) => {
-   //  clearInterval(moveInterval);
-    // slow = 0
-    // slow = 2;
-    /* setTimeout(() => {
-        console.log('clear')
-        
-        slow = 0;
-    }, 500) */
-}) 
+// Game2 commands here
 
-window.addEventListener('touchend', (event) => {
-    // clearInterval(moveInterval);
-   // slow = 0
-    // slow = 2;
-    /* setTimeout(() => {
-        console.log('clear')
-        
-        slow = 0;
-    }, 500) */
-})
 
-/* const moveup = () => {
-    socket.emit('move object', 'up')
-}
-
-const movedown = () => {
-    socket.emit('move object', 'down')
-}
-
-const moveleft = () => {
-    socket.emit('move object', 'left')
-}
-
-const moveright = () => {
-    socket.emit('move object', 'right')
-} */

@@ -1,7 +1,8 @@
+const game = document.getElementById('title').innerText
+
 const btnCreate = document.querySelector('#create')
 btnCreate.addEventListener('click', evt => {
-   //  socket.emit('create');
-    window.location.href = '/game'
+    window.location.href = '/game/' + game;
 })
 
 const btnJoin = document.querySelector('#join')
@@ -11,5 +12,5 @@ btnJoin.addEventListener('click', evt => {
 
 const confirm = () => {
     console.log('clickk')
-    window.location.href = '/player/' + document.getElementById('roominput').value
+    window.location.href = '/player/' + game + '/' + document.getElementById('roominput').value;
 }

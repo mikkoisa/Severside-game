@@ -11,11 +11,12 @@ socket.on('disconnect', () => {
 });
 
 socket.on('created', msg => {
-    document.getElementById('room').innerHTML = 'Room password: ' + msg
+    document.getElementById('roomId').innerHTML = 'Room password: ' + msg
 });
 
+
 socket.on('updatePlayers', msg => {
-    const screen = document.getElementById('screen'); 
+    const screen = document.getElementById('playerList');
     while (screen.hasChildNodes()) {   
         screen.removeChild(screen.firstChild);
     }
@@ -27,11 +28,14 @@ socket.on('updatePlayers', msg => {
     players.splice(0, 1);
 
     for (playa in players) {
-        const massage = document.createElement("p");
-        massage.innerHTML = players[playa];
+        const massage = document.createElement('li');
+        massage.className = 'col-8 offset-2'
+        massage.innerHTML = 'Player: ' + players[playa];
         massage.id = playa;        
         screen.appendChild(massage)
-    }
+    }  
+
+
 });
 
 
@@ -57,29 +61,33 @@ let pressDown = false;
 let pressLeft = false;
 let pressRight = false;
 
-const player = d3.select("circle").
-    attr("cx", x).
-    attr("cy", y).
-    attr("r", 15).
-    style("fill", "purple");
+const gameLoop = () => {
+    x = canvas._groups["0"]["0"].clientWidth / 2;
+    y = canvas._groups["0"]["0"].clientHeight / 2;
+    const player = d3.select("circle").
+        attr("cx", x).
+        attr("cy", y).
+        attr("r", 15).
+        style("fill", "purple");
 
-setInterval(() => {
-    if (pressUp) {
-        player.attr('cy', y -= 2)
-    } 
-    
-    if (pressDown) {
-        player.attr('cy', y += 2)
-    }
+    setInterval(() => {
+        if (pressUp) {
+            player.attr('cy', y -= 2)
+        } 
+        
+        if (pressDown) {
+            player.attr('cy', y += 2)
+        }
 
-    if (pressLeft) {
-        player.attr('cx', x -= 2)
-    }
+        if (pressLeft) {
+            player.attr('cx', x -= 2)
+        }
 
-    if (pressRight) {
-        player.attr('cx', x += 2)
-    }
-}, 1000 / 60);
+        if (pressRight) {
+            player.attr('cx', x += 2)
+        }
+    }, 1000 / 60);
+}
 
 const drawBall = () => {
     /* ctx.beginPath();
@@ -145,25 +153,12 @@ const draw = (unit, value, slow) => {
     
 } 
 
-
-/* const moveup = () => {
-    draw(y, -5); 
-}
-
-const movedown = () => {
-    draw(y, 5); 
-    // myGamePiece.speedY += 1; 
-}
-
-const moveleft = () => {
-    draw(x, -5); 
-    // myGamePiece.speedX -= 1;
-}
-
-const moveright = () => {
-    draw(x, 5); 
-   // myGamePiece.speedX += 1;
-} */
+socket.on('start game', msg => {
+    console.log('game starting');
+    document.getElementById('content').style.display = 'none'
+    document.getElementById('gameContent').style.display = 'inherit'
+    gameLoop();
+});
 
 socket.on('move object', (direction, slow) => {
     if (direction == 'up') {

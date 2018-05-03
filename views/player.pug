@@ -1,26 +1,31 @@
 extends layout
 
 block content
-  p#roomId #{roomId}
-  br
-  br
 
-  .row
-    button.col-sm-2.col-md-2.offset-md-5#up(onmousedown="move('up')" ontouchstart="move('up')")
-      i.material-icons expand_less
-  .row
-    button.col-md-3.offset-md-3#left(onmousedown="move('left')" ontouchstart="move('left')") LEFT
-    button.col-md-3#right(onmousedown="move('right')" ontouchstart="move('right')") RIGHT
-  .row
-    button.col-md-2.offset-md-5#down(onmousedown="move('down')" ontouchstart="move('down')") DOWN
+  .container#content
+    h4#game #{game}
+    h5#roomId #{roomId}
+   
+    .row
+      button#startGame.btn.btn-dark.col-6.offset-3.col-md-4.offset-md-4 Start game
 
-  #myModal.modal.fade(role='dialog')
-    .modal-dialog
-      .modal-content
-        .modal-body
-          p The room has been closed
-          button( data-dismiss= 'modal' aria-label= 'Close') Close
-  
-  include includes/scripts
-  script(src='/javascripts/player.js')
+  .container.controls#game1Controls
+    .row
+      button.mover.col-sm-2.col-md-2.offset-md-5#up
+        i.material-icons expand_less
+    .row
+      button.mover.col-md-3.offset-md-3#left LEFT
+      button.mover.col-md-3#right RIGHT
+    .row
+      button.mover.col-md-2.offset-md-5#down DOWN
+
+    #myModal.modal.fade(role='dialog')
+      .modal-dialog
+        .modal-content
+          .modal-body
+            p The room has been closed
+            button( data-dismiss= 'modal' aria-label= 'Close') Close
+    
+    include includes/scripts
+    script(src='/javascripts/player.js')
   

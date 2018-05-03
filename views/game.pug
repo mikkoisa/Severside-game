@@ -1,7 +1,19 @@
 extends layout
 
 block content
-  .container#gameContent
+  .container#content
+    h4#game #{game}
+    h5#roomId
+    .row
+      h5.col-12.text-center Players in room:
+      ul.col-6.offset-3#playerList
+        //-li.col-12 Player1: 
+        //-li.col-12 Player2: 
+        //-li.col-12 Player3: 
+        //-li.col-12 Player4:
+      p#description.col-6.offset-3.text-center 2-4 Players control the same object with different keys. Avoid another objects and collect items to increase score.
+
+  .container#gameContent  
     p.col#room Gameroom
     p.col#screen
     //-canvas.col#canvas
