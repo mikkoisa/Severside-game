@@ -1,5 +1,5 @@
-const socket = io.connect('https://localhost:3000');
-// const socket = io.connect('https://bestgame.jelastic.metropolia.fi');
+// const socket = io.connect('https://localhost:3000');
+const socket = io.connect('https://bestgame.jelastic.metropolia.fi');
 socket.emit('create');
 
 socket.on('connect', () => {
@@ -34,10 +34,7 @@ socket.on('updatePlayers', msg => {
         massage.id = playa;        
         screen.appendChild(massage)
     }  
-
-
 });
-
 
 // Some test game commands
 
@@ -48,29 +45,190 @@ const canvas = d3.select('svg')
 
 let x = canvas._groups["0"]["0"].clientWidth / 2;
 let y = canvas._groups["0"]["0"].clientHeight / 2;
+const r = 15;
 
-let moveInterval = ''
+// let x = canvas.width / 2
+// let y = canvas.height / 2
+
+let moveInterval = '';
+
+let player = '';
 
 const dx = 2;
 const dy = -2;
 const speedX = 0;
 const speedY = 0;
 
+let k = 0;
 let pressUp = false;
 let pressDown = false;
 let pressLeft = false;
 let pressRight = false;
 
+let particles = [];
+
+const drawMove = (movable) => {
+    let cy = parseFloat(movable.attr('cy'));
+    let cx = parseFloat(movable.attr('cx'));
+    let vy = parseFloat(movable.attr('vy'));
+    let vx = parseFloat(movable.attr('vx'));
+
+    cy += vy;
+    cx += vx;
+
+    if (cy > canvas._groups["0"]["0"].clientHeight || cy < 0) {
+        vy = -vy;
+    } else { 
+        // vy += g; 
+    }
+    if (cx > canvas._groups["0"]["0"].clientWidth || cx < 0) {
+        vx = -vx;
+    }
+
+    movable.
+        attr('cy', cy).
+        attr('cx', cx).
+        attr('vy', vy).
+        attr('vx', vx)
+
+}
+
+const calculateCollision = (particle1, particle2) => {
+
+    const absx = Math.abs(parseFloat(particle2.attr('cx')) - parseFloat(particle1.attr('cx')));
+    const absy = Math.abs(parseFloat(particle2.attr('cy')) - parseFloat(particle1.attr('cy')));
+
+    let distance = absx * absx + absy * absy;
+    distance = Math.sqrt(distance);
+
+    if (distance < parseFloat(particle1.attr('r')) + parseFloat(particle2.attr('r'))) {
+        return true;
+    }
+
+    return false;
+    
+}
+
+const chekcCollision = (particle1, particle2, isPalyer) => {
+    const p1x = parseFloat(particle1.attr('cx'));
+    const p1y = parseFloat(particle1.attr('cy'));
+    const p2x = parseFloat(particle2.attr('cx')); 
+    const p2y = parseFloat(particle2.attr('cy')); 
+    
+    const p1vx = parseFloat(particle1.attr('vx')); 
+    const p1vy = parseFloat(particle1.attr('vy')); 
+    const p2vx = parseFloat(particle2.attr('vx')); 
+    const p2vy = parseFloat(particle2.attr('vy'));
+
+    const p1w = parseFloat(particle1.attr('weight')); 
+    const p2w = parseFloat(particle2.attr('weight')); 
+    
+    if (calculateCollision(particle1, particle2)) {
+
+        if (isPalyer == true) {
+            console.log('GAME OVER!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            clearInterval(moveInterval);
+            k = 0;
+            particles = [];
+            // Remove contenst of canvas
+            d3.select('svg').html('')
+            gameLoop();
+
+        } else if (particle1.attr(particle2) != true || particle2.attr(particle1) != true) {
+            const vx1 = (p1vx * (p1w - p2w) + 2 * p2w * p2vx) / (p1w + p2w);
+            const vy1 = (p1vy * (p1w - p2w) + 2 * p2w * p2vy) / (p1w + p2w);
+            const vx2 = (p2vx * (p2w - p1w) + 2 * p1w * p1vx) / (p1w + p2w);
+            const vy2 = (p2vy * (p2w - p1w) + 2 * p1w * p1vy) / (p1w + p2w);
+
+            particle1.attr(particle2.attr('id'), true);
+            particle2.attr(particle1.attr('id'), true);
+
+            console.log(particle1.attr(particle2.attr('id')) + ' and ' + particle2.attr(particle1.attr('id')))
+            // set velocities for both balls
+            particle1.attr('vx', vx1);
+            particle1.attr('vy', vy1);
+            particle2.attr('vx', vx2);
+            particle2.attr('vy', vy2);
+
+            while (calculateCollision(particle1, particle2)) { 
+                
+                console.log(particle1.attr(particle2.attr('id')))
+
+                drawMove(particle1);
+                drawMove(particle2);
+
+            }
+            console.log('break out of while stuff')
+            particle1.attr(particle2.attr('id'), null);
+            particle2.attr(particle1.attr('id'), null);
+
+            
+        }
+        
+    }
+}
+
+const moveParticle = (particle) => {
+    let movable = '';
+
+    if (typeof particle == 'string') {
+        movable = particles[particle];
+    } else {
+        movable = particle;
+    }
+
+    chekcCollision(player, movable, true);
+    
+    for (let j = 0; j < particles.length; j++) {
+        if (j != particle) {
+            chekcCollision(movable, particles[j], false);
+        }
+    }
+
+    drawMove(movable);
+
+}
+
+const addParticle = () => {
+    const weight = Math.floor(Math.random() * (60 - 10 + 1)) + 10;
+    const particle = d3.select('svg').append('circle').
+        attr('cx', Math.random() * canvas._groups["0"]["0"].clientWidth).
+        attr("cy", Math.random() * canvas._groups["0"]["0"].clientHeight).
+        attr('vx', Math.random() * 10 - 5).
+        attr('vy', Math.random() * 10 - 5).
+        attr('r', 2 + weight).
+        attr('id', 'particle' + k).
+        attr('weight', weight).
+        style('fill', 'white');
+    k++;
+    particles.push(particle);
+}
+
 const gameLoop = () => {
+    let timer = 0;
     x = canvas._groups["0"]["0"].clientWidth / 2;
     y = canvas._groups["0"]["0"].clientHeight / 2;
-    const player = d3.select("circle").
+
+    player = d3.select('svg').append("circle").
         attr("cx", x).
         attr("cy", y).
-        attr("r", 15).
+        attr("r", r).
         style("fill", "purple");
 
-    setInterval(() => {
+    moveInterval = setInterval(() => {
+        if (timer == 0 ||
+            timer == 500 ||
+            timer == 1000 ||
+            timer == 2000 ||
+            timer == 3000 ||
+            timer == 4000 ||
+            timer == 5000) {
+            addParticle();
+        }
+        for (particle in particles) {
+            moveParticle(particle);
+        }
+
         if (pressUp) {
             player.attr('cy', y -= 2)
         } 
@@ -86,72 +244,10 @@ const gameLoop = () => {
         if (pressRight) {
             player.attr('cx', x += 2)
         }
+        timer += 1
     }, 1000 / 60);
 }
 
-const drawBall = () => {
-    /* ctx.beginPath();
-    ctx.arc(x, y, 2, 0, Math.PI * 2);
-    ctx.fillStyle = "#0095DD";
-    ctx.closePath();
-    ctx.fill(); */
-
-    const circle = new Path2D();
-    circle.moveTo(x, y);
-    circle.arc(x, y, 2, 0, Math.PI * 2);
-    circle.closePath();
-    ctx.fill(circle);
-}
-
-const draw = (unit, value, slow) => {
-    console.log(canvas);
-    /* ctx.clearRect(0, 0, canvas.width, canvas.height);
-    if (unit == 'y') {
-        if (slow == 0) {
-            y += value
-        } else {
-            y += value / slow
-        }
-       
-    } else if (unit == 'x') {
-        if (slow == 0) {
-            x += value
-        } else {
-            x += value / slow
-        }
-    }
-    console.log(unit + ' : ' + value);
-    drawBall(); */
-
-    moveInterval = setInterval(() => {
-
-        if (pressUp && !pressDown && !pressLeft && !pressRight) {
-            console.log('up: ' + pressUp + pressDown + pressLeft + pressRight)
-            player.attr('cy', y -= 2)
-        } else if (!pressUp && pressDown && !pressLeft && !pressRight) {
-            console.log('down: ' + pressUp + pressDown + pressLeft + pressRight)
-            player.attr('cy', y += 2)
-        } else if (!pressUp && !pressDown && pressLeft && !pressRight) {
-            console.log('left: ' + pressUp + pressDown + pressLeft + pressRight)
-            player.attr('cx', x -= 2)
-        } else if (!pressUp && !pressDown && !pressLeft && pressRight) {
-            console.log('right: ' + pressUp + pressDown + pressLeft + pressRight)
-            player.attr('cx', x += 2)
-        }
-    }, 1000 / 60);
-
-    /* if (unit == 'y') {
-        moveInterval = setInterval(() => {
-            player.attr('cy', y += value)
-        }, 1000 / 60);
-       
-    } else if (unit == 'x') {
-        moveInterval = setInterval(() => {
-            player.attr('cx', x += value)
-        }, 1000 / 60);
-    } */
-    
-} 
 
 socket.on('start game', msg => {
     console.log('game starting');
@@ -163,16 +259,12 @@ socket.on('start game', msg => {
 socket.on('move object', (direction, slow) => {
     if (direction == 'up') {
         pressUp = true;
-        // draw('y', -1, slow);
     } else if (direction == 'down') {
         pressDown = true;
-        // draw('y', 1, slow);
     } else if (direction == 'left') {
         pressLeft = true;
-        // draw('x', -1, slow);   
     } else if (direction == 'right') {
         pressRight = true;
-        // draw('x', 1, slow);
     }
 });
 
@@ -185,9 +277,5 @@ socket.on('stop object', (direction, slow) => {
         pressLeft = false;  
     } else if (direction == 'right') {
         pressRight = false;
-    }
-    if (pressDown == false && pressUp == false && pressLeft == false && pressRight == false) {
-        clearInterval(moveInterval); 
-        moveInterval = '';
     }
 }); 

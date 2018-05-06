@@ -23,6 +23,10 @@ button {
   height: 50px
 }
 
+circle {
+  fill: red;
+}
+
 .container-canvas {
   margin-right: auto;
   margin-left: auto;

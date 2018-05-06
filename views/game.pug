@@ -11,14 +11,15 @@ block content
         //-li.col-12 Player2: 
         //-li.col-12 Player3: 
         //-li.col-12 Player4:
-      p#description.col-6.offset-3.text-center 2-4 Players control the same object with different keys. Avoid another objects and collect items to increase score.
+      p#description.col-6.offset-3.text-center 2-4 Players control the same object with different keys. Avoid other objects and collect items to increase score.
 
   .container#gameContent  
     p.col#room Gameroom
     p.col#screen
     //-canvas.col#canvas
     svg.col#canvas
-      circle
-    include includes/scripts
-    script(src='/javascripts/game.js')
+      //-circle
+
+  include includes/scripts
+  script(src='/javascripts/game.js')
   
