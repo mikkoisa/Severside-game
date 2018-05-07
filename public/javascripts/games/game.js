@@ -1,71 +1,21 @@
-// const socket = io.connect('https://localhost:3000');
-const socket = io.connect('https://bestgame.jelastic.metropolia.fi');
+const socket = io.connect('https://localhost:3000');
+// const socket = io.connect('https://bestgame.jelastic.metropolia.fi');
 socket.emit('create');
 
-socket.on('connect', () => {
-    console.log('Host connected');
-});
-
-socket.on('disconnect', () => {
-    console.log('Host disconnected!');
-});
-
-socket.on('created', msg => {
-    document.getElementById('roomId').innerHTML = 'Room password: ' + msg
-});
-
-
-socket.on('updatePlayers', msg => {
-    const screen = document.getElementById('playerList');
-    while (screen.hasChildNodes()) {   
-        screen.removeChild(screen.firstChild);
-    }
-
-    const players = [];
-    for (playa in msg) {
-        players.push(playa);
-    }
-    players.splice(0, 1);
-
-    for (playa in players) {
-        const massage = document.createElement('li');
-        massage.className = 'col-8 offset-2'
-        massage.innerHTML = 'Player: ' + players[playa];
-        massage.id = playa;        
-        screen.appendChild(massage)
-    }  
-});
-
-// Some test game commands
-
-// const canvas = document.getElementById('canvas');
 const canvas = d3.select('svg')
-
-// const ctx = canvas.getContext("2d");
-
 let x = canvas._groups["0"]["0"].clientWidth / 2;
 let y = canvas._groups["0"]["0"].clientHeight / 2;
 const r = 15;
-
-// let x = canvas.width / 2
-// let y = canvas.height / 2
-
 let moveInterval = '';
-
 let player = '';
-
-const dx = 2;
-const dy = -2;
-const speedX = 0;
-const speedY = 0;
-
 let k = 0;
+let timer = '';
 let pressUp = false;
 let pressDown = false;
 let pressLeft = false;
 let pressRight = false;
-
 let particles = [];
+
 
 const drawMove = (movable) => {
     let cy = parseFloat(movable.attr('cy'));
@@ -94,7 +44,6 @@ const drawMove = (movable) => {
 }
 
 const calculateCollision = (particle1, particle2) => {
-
     const absx = Math.abs(parseFloat(particle2.attr('cx')) - parseFloat(particle1.attr('cx')));
     const absy = Math.abs(parseFloat(particle2.attr('cy')) - parseFloat(particle1.attr('cy')));
 
@@ -104,7 +53,6 @@ const calculateCollision = (particle1, particle2) => {
     if (distance < parseFloat(particle1.attr('r')) + parseFloat(particle2.attr('r'))) {
         return true;
     }
-
     return false;
     
 }
@@ -124,16 +72,21 @@ const chekcCollision = (particle1, particle2, isPalyer) => {
     const p2w = parseFloat(particle2.attr('weight')); 
     
     if (calculateCollision(particle1, particle2)) {
-
+        // If player touches a particle
         if (isPalyer == true) {
-            console.log('GAME OVER!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            console.log('GAME OVER!')
             clearInterval(moveInterval);
             k = 0;
             particles = [];
-            // Remove contenst of canvas
-            d3.select('svg').html('')
-            gameLoop();
+            timer = 0;
 
+            // Remove contents of canvas
+            d3.select('svg').html('')
+
+            socket.emit('game over', 'game1');
+            $('#scoreModal').modal()
+
+        // If collision is between two particles, calculate new directions
         } else if (particle1.attr(particle2) != true || particle2.attr(particle1) != true) {
             const vx1 = (p1vx * (p1w - p2w) + 2 * p2w * p2vx) / (p1w + p2w);
             const vy1 = (p1vy * (p1w - p2w) + 2 * p2w * p2vy) / (p1w + p2w);
@@ -151,20 +104,13 @@ const chekcCollision = (particle1, particle2, isPalyer) => {
             particle2.attr('vy', vy2);
 
             while (calculateCollision(particle1, particle2)) { 
-                
-                console.log(particle1.attr(particle2.attr('id')))
-
                 drawMove(particle1);
                 drawMove(particle2);
 
             }
-            console.log('break out of while stuff')
             particle1.attr(particle2.attr('id'), null);
             particle2.attr(particle1.attr('id'), null);
-
-            
-        }
-        
+        } 
     }
 }
 
@@ -186,7 +132,6 @@ const moveParticle = (particle) => {
     }
 
     drawMove(movable);
-
 }
 
 const addParticle = () => {
@@ -205,7 +150,7 @@ const addParticle = () => {
 }
 
 const gameLoop = () => {
-    let timer = 0;
+    timer = 0;
     x = canvas._groups["0"]["0"].clientWidth / 2;
     y = canvas._groups["0"]["0"].clientHeight / 2;
 
@@ -248,12 +193,58 @@ const gameLoop = () => {
     }, 1000 / 60);
 }
 
+// Socket stuff here
+socket.on('connect', () => {
+    console.log('Host connected');
+});
+
+socket.on('disconnect', () => {
+    console.log('Host disconnected!');
+});
+
+socket.on('created', msg => {
+    document.getElementById('roomId').innerHTML = 'Room password: ' + msg
+});
+
+
+socket.on('updatePlayers', msg => {
+    const screen = document.getElementById('playerList');
+    while (screen.hasChildNodes()) {   
+        screen.removeChild(screen.firstChild);
+    }
+
+    const players = [];
+    for (playa in msg) {
+        players.push(playa);
+    }
+    players.splice(0, 1);
+
+    for (playa in players) {
+        const massage = document.createElement('li');
+        massage.className = 'col-8 offset-2'
+        massage.innerHTML = 'Player: ' + players[playa];
+        massage.id = playa;        
+        screen.appendChild(massage)
+    }  
+});
+
 
 socket.on('start game', msg => {
     console.log('game starting');
     document.getElementById('content').style.display = 'none'
     document.getElementById('gameContent').style.display = 'inherit'
     gameLoop();
+});
+
+socket.on('after game', (game, to) => {
+    if (to == 'game') {
+        $('#scoreModal').modal('toggle');
+        gameLoop();
+    } else if (to == 'lobby') {
+        $('#scoreModal').modal('toggle');
+        document.getElementById('content').style.display = 'inherit'
+        document.getElementById('gameContent').style.display = 'none'
+    }
 });
 
 socket.on('move object', (direction, slow) => {

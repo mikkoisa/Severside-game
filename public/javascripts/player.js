@@ -1,21 +1,20 @@
-// const socket = io.connect('https://localhost:3000');
-const socket = io.connect('https://bestgame.jelastic.metropolia.fi');
+const socket = io.connect('https://localhost:3000');
+// const socket = io.connect('https://bestgame.jelastic.metropolia.fi');
 
 const playerList = d3.select('#playerList');
+const game = document.getElementById('game').innerHTML;
 
 socket.emit('listUsers', document.getElementById('roomId').innerHTML);
 
 // Check which controls to display
 
 $('#startGame').on('click touchstart', (e) => {
-    document.getElementById('content').style.display = 'none'
-
     socket.emit('start game');
     
     // Check which game this is
-    if (document.getElementById('game').innerHTML == 'Game 1') {
+    /* if (game == 'Ball-Game') {
         document.getElementById('game1Controls').style.display = 'initial';
-    }
+    } */
 
 });
 
@@ -30,6 +29,17 @@ socket.on('disconnect', () => {
 socket.on('closeRoom', (msg) => {
     $('#myModal').modal()
 });
+
+socket.on('start game', msg => {
+    document.getElementById('content').style.display = 'none'
+    if (game == 'Ball-Game') {
+        document.getElementById('game1Controls').style.display = 'initial';
+    }
+});
+
+socket.on('game over', gameName => {
+    $('#scoreModal').modal()
+})
 
 /*
 socket.on('listPlayers', msg => {
@@ -56,6 +66,30 @@ socket.on('listPlayers', msg => {
 $('#myModal').on('hidden.bs.modal', () => {
     window.location.href = '/'
 })
+
+
+const restart = () => {
+    socket.emit('after game', game, 'game')
+}
+
+const toLobby = () => {
+    socket.emit('after game', game, 'lobby')
+    // window.location.href = '/game/' + document.getElementById('game').innerHTML
+    /* $('.controls').css('display', 'none')
+
+    document.getElementById('content').style.display = 'inherit' */
+}
+
+socket.on('after game', (gameName, to) => {
+    if (to == 'game') {
+        $('#scoreModal').modal('toggle');
+        // gameLoop();
+    } else if (to == 'lobby') {
+        $('#scoreModal').modal('toggle');
+        $('.controls').css('display', 'none')
+        document.getElementById('content').style.display = 'inherit'
+    }
+});
 
 
 // Game1 commands

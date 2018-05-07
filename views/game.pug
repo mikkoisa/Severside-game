@@ -1,25 +1,30 @@
 extends layout
 
 block content
-  .container#content
-    h4#game #{game}
-    h5#roomId
-    .row
-      h5.col-12.text-center Players in room:
-      ul.col-6.offset-3#playerList
-        //-li.col-12 Player1: 
-        //-li.col-12 Player2: 
-        //-li.col-12 Player3: 
-        //-li.col-12 Player4:
-      p#description.col-6.offset-3.text-center 2-4 Players control the same object with different keys. Avoid other objects and collect items to increase score.
+  include includes/preGame
 
   .container#gameContent  
     p.col#room Gameroom
     p.col#screen
-    //-canvas.col#canvas
     svg.col#canvas
-      //-circle
+
+  #scoreModal.modal.fade(role='dialog' data-backdrop="static" data-keyboard="false")
+      .modal-dialog.modal-dialog-centered
+        .modal-content
+          .modal-header.mx-auto
+            .row
+              h2.text-center.col-12 Game Over
+              p.text-center.col-12 Score: 4546
+  
+          .modal-body
+            .row
+              h6.text-center.col-12 High Scores: #{game}
+            .row#scores
+              p#name.text-center.col-4 Name
+              p#score.text-center.col-4 Score
+              p#date.text-center.col-4 Date
+            
 
   include includes/scripts
-  script(src='/javascripts/game.js')
+  script(src='/javascripts/games/game.js')
   

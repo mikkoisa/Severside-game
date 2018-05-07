@@ -119,8 +119,16 @@ io.on('connection', socket => {
     });
 
     socket.on('start game', () => {
-        socket.broadcast.to(room).emit('start game', io.sockets.adapter.rooms[room].sockets);
+        io.sockets.in(room).emit('start game', io.sockets.adapter.rooms[room].sockets);
     });
+
+    socket.on('game over', (game) => {
+        socket.broadcast.to(room).emit('game over', game);
+    });
+
+    socket.on('after game', (game, to) => {
+        io.sockets.in(room).emit('after game', game, to);
+    })
 
     socket.on('move object', (direction) => {
         console.log('moving' + direction)
@@ -136,6 +144,7 @@ io.on('connection', socket => {
 DB.connect('mongodb://' + process.env.DB_HOST + ':27017/scores', app);
 
 const scoreSchema = {
+    'game': String,
     'name': String,
     'score': Number,
     'date': String
@@ -144,6 +153,7 @@ const scoreSchema = {
 const Score = DB.getSchema(scoreSchema, 'Score');
 
 /* Score.create(new Score({
+    'game' : 'Ball-Game',
     'name': 'test',
     'score': 5,
     'date': 'testdate'

@@ -13,7 +13,17 @@ router.get('/lobby/:game', (req, res, next) => {
 });
 
 router.get('/game/:game', (req, res, next) => {
-    res.render('game', { 'game': req.params.game });
+    // Check which game
+    switch (req.params.game) {    
+    case 'Ball-Game':
+        res.render('game', { 'game': req.params.game });
+        break;
+
+    case 'Game 2':
+        res.render('game2', { 'game': req.params.game });
+        break;
+    default:
+    }
 });
 
 router.get('/player/:game/:room', (req, res, next) => {

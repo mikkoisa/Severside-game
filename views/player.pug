@@ -8,6 +8,9 @@ block content
    
     .row
       button#startGame.btn.btn-dark.col-6.offset-3.col-md-4.offset-md-4 Start game
+    //-.row
+      h6.col-12.text-center Team name
+      input#teamName.input-group-text.col-6.offset-3
 
   .container.controls#game1Controls
     .row
@@ -19,12 +22,23 @@ block content
     .row
       button.mover.col-md-2.offset-md-5#down DOWN
 
+
     #myModal.modal.fade(role='dialog')
       .modal-dialog
         .modal-content
           .modal-body
             p The room has been closed
             button( data-dismiss= 'modal' aria-label= 'Close') Close
+
+    #scoreModal.modal.fade(role='dialog' data-backdrop="static" data-keyboard="false")
+      .modal-dialog.modal-dialog-centered
+        .modal-content
+          .modal-header.mx-auto
+            h6 High Scores: #{game}
+          .modal-body.mx-auto
+            p List here
+            button(data-dismiss= 'modal' aria-label= 'Close' onclick= 'restart()') New game
+            button(data-dismiss= 'modal' aria-label= 'Close' onclick= 'toLobby()') Close game
     
     include includes/scripts
     script(src='/javascripts/player.js')

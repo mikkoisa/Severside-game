@@ -52,6 +52,9 @@ circle {
   display: none
 }
 
+#scores {
+  border-bottom: 1px solid #000000;
+}
 
 #description {
   background-color: rgb(241, 239, 234);
