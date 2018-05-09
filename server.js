@@ -139,22 +139,11 @@ io.on('connection', socket => {
         socket.broadcast.to(room).emit("stop object", direction);
     });
 
+    socket.on('submit name', (value) => {
+        socket.broadcast.to(room).emit('submit name', value);
+    });
+
 });
 
 DB.connect('mongodb://' + process.env.DB_HOST + ':27017/scores', app);
 
-const scoreSchema = {
-    'game': String,
-    'name': String,
-    'score': Number,
-    'date': String
-};
-
-const Score = DB.getSchema(scoreSchema, 'Score');
-
-/* Score.create(new Score({
-    'game' : 'Ball-Game',
-    'name': 'test',
-    'score': 5,
-    'date': 'testdate'
-})) */

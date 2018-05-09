@@ -11,8 +11,14 @@ class Database {
         });
     }
 
-    getSchema(schema, name) {
-        const s = new this.mongoose.Schema(schema);
+    getSchema(name) {
+        const scoreSchema = {
+            'game': String,
+            'name': String,
+            'score': Number,
+            'date': String
+        };
+        const s = new this.mongoose.Schema(scoreSchema);
         return this.mongoose.model(name, s);
     }
 }

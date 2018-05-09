@@ -80,10 +80,15 @@ const toLobby = () => {
     document.getElementById('content').style.display = 'inherit' */
 }
 
+const submitName = () => {
+    const value = d3.select('#modalInput').property("value");
+    socket.emit('submit name', value)
+}
+
 socket.on('after game', (gameName, to) => {
     if (to == 'game') {
         $('#scoreModal').modal('toggle');
-        // gameLoop();
+        
     } else if (to == 'lobby') {
         $('#scoreModal').modal('toggle');
         $('.controls').css('display', 'none')

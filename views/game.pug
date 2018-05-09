@@ -4,8 +4,7 @@ block content
   include includes/preGame
 
   .container#gameContent  
-    p.col#room Gameroom
-    p.col#screen
+    h4.col#screen
     svg.col#canvas
 
   #scoreModal.modal.fade(role='dialog' data-backdrop="static" data-keyboard="false")
@@ -14,14 +13,14 @@ block content
           .modal-header.mx-auto
             .row
               h2.text-center.col-12 Game Over
-              p.text-center.col-12 Score: 4546
+              h5#finalScore.text-center.col-12
   
-          .modal-body
+          .modal-body#scoreList
             .row
               h6.text-center.col-12 High Scores: #{game}
             .row#scores
-              p#name.text-center.col-4 Name
-              p#score.text-center.col-4 Score
+              p#name.text-center.col-4.offset-1 Name
+              p#score.text-center.col-3 Score
               p#date.text-center.col-4 Date
             
 

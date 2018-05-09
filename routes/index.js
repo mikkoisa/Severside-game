@@ -1,10 +1,13 @@
 const express = require('express');
 const moment = require('moment')
 const router = express.Router();
+const DB = require('../modules/database');
+const Score = DB.getSchema('Score');
 
 /* GET home page. */
 
 router.get('/', (req, res, next) => {
+    Score.collection.drop();
     res.render('menu')
 });
 
@@ -28,6 +31,30 @@ router.get('/game/:game', (req, res, next) => {
 
 router.get('/player/:game/:room', (req, res, next) => {
     res.render('player', { 'roomId': req.params.room, 'game': req.params.game });
+});
+
+
+// Database stuff
+router.get('/scores/:game/', (req, res, next) => {
+    Score.find().sort({ 'score': 'descending' }).
+        then(scores => {
+            res.send(scores);
+        });
+});
+
+router.post('/scores/:game/:name/:score', (req, res, next) => {
+    const time = new Date().toJSON().
+        slice(0, 10).
+        replace(/-/g, '/');
+
+    Score.create(new Score({
+        'game': req.params.game,
+        'name': req.params.name,
+        'score': req.params.score,
+        'date': time
+    }))
+
+    console.log('saved to db')
 });
 
 module.exports = router;

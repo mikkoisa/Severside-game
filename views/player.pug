@@ -5,6 +5,9 @@ block content
   .container#content
     h4#game #{game}
     h5#roomId #{roomId}
+    .row.form-group.mx-auto#nameInput
+      input#modalInput.col-7.form-control(placeholder= 'Team name')
+      button#modalButton.col-4.btn(onclick= 'submitName()') Submit
    
     .row
       button#startGame.btn.btn-dark.col-6.offset-3.col-md-4.offset-md-4 Start game
@@ -13,14 +16,21 @@ block content
       input#teamName.input-group-text.col-6.offset-3
 
   .container.controls#game1Controls
-    .row
-      button.mover.col-sm-2.col-md-2.offset-md-5#up
+    .row.center-text
+      i#up.mover.mx-auto.material-icons(style= 'font-size: 150px; padding: 0px') expand_less
+      //-svg#up
+        polygon(points= '200,10 250,100 160,100' style = 'fill:grey;stroke:black;stroke-width:1')
+
+      //-button.mover.col-sm-2.col-md-2.offset-md-5#up
         i.material-icons expand_less
     .row
-      button.mover.col-md-3.offset-md-3#left LEFT
-      button.mover.col-md-3#right RIGHT
+      i#left.col-6.mover.mx-auto.material-icons(style= 'font-size: 150px; padding: 0px') chevron_left
+      i#right.col-6.mover.mx-auto.material-icons(style= 'font-size: 150px; padding: 0px') chevron_right
+      //-button.mover.col-md-3.offset-md-3#left LEFT
+      //-button.mover.col-md-3#right RIGHT
     .row
-      button.mover.col-md-2.offset-md-5#down DOWN
+      i#down.mover.mx-auto.material-icons(style= 'font-size: 150px; padding: 0px') expand_more
+      //-button.mover.col-md-2.offset-md-5#down DOWN
 
 
     #myModal.modal.fade(role='dialog')
@@ -33,12 +43,10 @@ block content
     #scoreModal.modal.fade(role='dialog' data-backdrop="static" data-keyboard="false")
       .modal-dialog.modal-dialog-centered
         .modal-content
-          .modal-header.mx-auto
-            h6 High Scores: #{game}
-          .modal-body.mx-auto
-            p List here
-            button(data-dismiss= 'modal' aria-label= 'Close' onclick= 'restart()') New game
-            button(data-dismiss= 'modal' aria-label= 'Close' onclick= 'toLobby()') Close game
+          .modal-body
+            .row.mx-auto
+              button.col-4.offset-1.btn.btn-dark(data-dismiss= 'modal' aria-label= 'Close' onclick= 'restart()') New game
+              button.col-4.offset-2.btn.btn-dark(data-dismiss= 'modal' aria-label= 'Close' onclick= 'toLobby()') Close game
     
     include includes/scripts
     script(src='/javascripts/player.js')
