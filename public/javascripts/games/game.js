@@ -1,5 +1,5 @@
-const url = 'https://localhost:3000'
-// const url = 'https://bestgame.jelastic.metropolia.fi'
+// const url = 'https://localhost:3000'
+const url = 'https://bestgame.jelastic.metropolia.fi'
 
 const socket = io.connect(url);
 socket.emit('create');
@@ -25,16 +25,16 @@ const drawMove = (movable) => {
     let cx = parseFloat(movable.attr('cx'));
     let vy = parseFloat(movable.attr('vy'));
     let vx = parseFloat(movable.attr('vx'));
+    const rad = parseFloat(movable.attr('r'));
 
     cy += vy;
     cx += vx;
 
-    if (cy > canvas._groups["0"]["0"].clientHeight || cy < 0) {
+    if (cy > canvas._groups["0"]["0"].clientHeight - rad || cy < 0 + rad) {
         vy = -vy;
-    } else { 
-        // vy += g; 
-    }
-    if (cx > canvas._groups["0"]["0"].clientWidth || cx < 0) {
+    } 
+
+    if (cx > canvas._groups["0"]["0"].clientWidth - rad || cx < 0 + rad) {
         vx = -vx;
     }
 
@@ -43,7 +43,6 @@ const drawMove = (movable) => {
         attr('cx', cx).
         attr('vy', vy).
         attr('vx', vx)
-
 }
 
 const calculateCollision = (particle1, particle2) => {
@@ -61,54 +60,6 @@ const calculateCollision = (particle1, particle2) => {
 }
 
 const checkHighscores = (json) => {
-    console.log('check highscore')
-
-    /* const list = [];
-    for (score in json) {
-        list.push(json[score])
-    }
-    
-    d3.select('#finalScore').text('Score: ' + playerScore);
-    const scoreList = d3.select('#scoreList')
-
-    const time = new Date().toJSON().
-                slice(0, 10).
-                replace(/-/g, '/');
-    const item = { 'name': teamName, 'score': playerScore, 'date': time }
-
-    if (json.length == 0) {
-        console.log('score list is empty')
-        // If highscores list is empty add the score
-        json.splice(0, 0, item)
-        list.splice(0, 0, item)
-    }
-    for (let i = 0; i < json.length && i < 5; i++) {
-        console.log(json.length)
-        console.log(i)
-        console.log(json.length - 1)
-        
-
-        if (playerScore >= json[i].score) {
-            console.log('score made to list!')
-            
-            if (json[i].name == teamName && json[i].score == playerScore) {
-                console.log('didnt pass duplicate test')
-            } else {
-                console.log('add to list')
-                // Add to local highscore-list
-                list.splice(i, 0, item)
-                console.log('Json length after splice: ' + json.length) 
-            }
-            // fetch(scoreRequest)                       
-
-        } else if (i == json.length - 1 && json.length < 5) {
-            console.log('added cause list not full')
-            // fetch(scoreRequest)
-            list.splice(i, 0, item)
-            console.log('Json length after splice2: ' + json.length) 
-        }
-    } */
-
     const scoreList = d3.select('#scoreList')
 
     for (let i = 0; i < json.length && i < 5; i++) {
@@ -172,19 +123,13 @@ const chekcCollision = (particle1, particle2, isPalyer) => {
             const scoreRequest = new Request(url + '/scores/Ball-Game/' + teamName + '/' + playerScore, myInit)  
             fetch(scoreRequest)
             console.log('sent to db')
-            
+
             fetch(new Request(url + '/scores/' + game)).then(response => response.json()).
             then(json => { 
                 console.log('get from db')
                 checkHighscores(json)
                 
             })
-
-            // Display highscores
-           /* fetch(new Request(url + '/scores/' + game)).then(response => response.json()).
-                then(json => { 
-                    checkHighscores(json)
-                }); */
 
         // If collision is between two particles, calculate new directions
         } else if (particle1.attr(particle2) != true || particle2.attr(particle1) != true) {
@@ -196,7 +141,6 @@ const chekcCollision = (particle1, particle2, isPalyer) => {
             particle1.attr(particle2.attr('id'), true);
             particle2.attr(particle1.attr('id'), true);
 
-            console.log(particle1.attr(particle2.attr('id')) + ' and ' + particle2.attr(particle1.attr('id')))
             // set velocities for both balls
             particle1.attr('vx', vx1);
             particle1.attr('vy', vy1);
@@ -245,7 +189,24 @@ const addParticle = () => {
         attr('id', 'particle' + k).
         attr('weight', weight).
         style('fill', 'white');
+
     k++;
+    const radius = parseInt(particle.attr('r'), 16);
+    const cx = parseFloat(particle.attr('cx'));
+    const cy = parseFloat(particle.attr('cy'));
+
+    if (cx < radius) {
+        particle.attr('cx', cx + radius)
+    } else if (canvas._groups["0"]["0"].clientWidth - cx <= radius) {
+        particle.attr('cx', cx - radius)
+    }
+
+    if (cy < radius) {
+        particle.attr('cy', cy + radius)
+    } else if (canvas._groups["0"]["0"].clientHeight - cy <= radius) {
+        particle.attr('cy', cy - radius)
+    }
+    
     particles.push(particle);
 }
 
@@ -278,25 +239,20 @@ const gameLoop = () => {
         for (particle in particles) {
             moveParticle(particle);
         }
-
         if (pressUp) {
-            player.attr('cy', y -= 2)
+            player.attr('cy', y -= 3)
         } 
-        
         if (pressDown) {
-            player.attr('cy', y += 2)
+            player.attr('cy', y += 3)
         }
-
         if (pressLeft) {
-            player.attr('cx', x -= 2)
+            player.attr('cx', x -= 3)
         }
-
         if (pressRight) {
-            player.attr('cx', x += 2)
+            player.attr('cx', x += 3)
         }
         timer += 1
         counter.text('Score: ' + timer)
-
     }, 1000 / 60);
 }
 
