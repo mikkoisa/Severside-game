@@ -6,7 +6,7 @@ let playerId = '';
 const playerList = d3.select('#playerList');
 const game = document.getElementById('game').innerHTML;
 
-socket.emit('listUsers', document.getElementById('roomId').innerHTML);
+// socket.emit('listUsers', document.getElementById('roomId').innerHTML);
 
 // Check which controls to display
 

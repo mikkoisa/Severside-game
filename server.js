@@ -112,6 +112,9 @@ io.on('connection', socket => {
             room = huone
             console.log(io.sockets.adapter.rooms[room].sockets)
             socket.broadcast.to(huone).emit('updatePlayers', io.sockets.adapter.rooms[room].sockets, socket.id)
+        } else {
+            console.log('didnt get to toom')
+            socket.to(socket.id).emit('remove user', 'Incorrect room password or the room has been closed')
         }
     });
 
