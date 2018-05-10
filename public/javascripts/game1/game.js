@@ -111,25 +111,7 @@ const chekcCollision = (particle1, particle2, isPalyer) => {
         // If player touches a particle
         if (isPalyer == true) {
             console.log('GAME OVER!: ' + timer)
-            playerScore = timer;
-            clearInterval(moveInterval);
-            k = 0;
-            particles = [];
-
-            // Remove contents of canvas
-            d3.select('svg').html('')
-
-            const myInit = { 'method': 'POST' };
-            const scoreRequest = new Request(url + '/scores/Ball-Game/' + teamName + '/' + playerScore, myInit)  
-            fetch(scoreRequest)
-            console.log('sent to db')
-
-            fetch(new Request(url + '/scores/' + game)).then(response => response.json()).
-            then(json => { 
-                console.log('get from db')
-                checkHighscores(json)
-                
-            })
+            gameOver();
 
         // If collision is between two particles, calculate new directions
         } else if (particle1.attr(particle2) != true || particle2.attr(particle1) != true) {
@@ -217,8 +199,10 @@ const gameLoop = () => {
     pressRight = false;
     const counter = d3.select('#screen');
     timer = 0;
-    x = canvas._groups["0"]["0"].clientWidth / 2;
-    y = canvas._groups["0"]["0"].clientHeight / 2;
+    const width = canvas._groups["0"]["0"].clientWidth;
+    const height = canvas._groups["0"]["0"].clientHeight;
+    x = width / 2;
+    y = height / 2;  
 
     player = d3.select('svg').append("circle").
         attr("cx", x).
@@ -227,6 +211,7 @@ const gameLoop = () => {
         style("fill", "purple");
 
     moveInterval = setInterval(() => {
+
         if (timer == 0 ||
             timer == 500 ||
             timer == 1000 ||
@@ -251,9 +236,38 @@ const gameLoop = () => {
         if (pressRight) {
             player.attr('cx', x += 3)
         }
+
+        if (player.attr('cy') <= 0 + r || player.attr('cy') >= height - r || player.attr('cx') <= 0 + r || player.attr('cx') >= width - r) {
+            gameOver();
+        }
         timer += 1
         counter.text('Score: ' + timer)
     }, 1000 / 60);
+}
+
+const gameOver = () => {
+    playerScore = timer;
+    clearInterval(moveInterval);
+    k = 0;
+    particles = [];
+
+    document.getElementById('finalScore').innerHTML = 'Score: ' + playerScore
+
+    // Remove contents of canvas
+    d3.select('svg').html('')
+
+    const myInit = { 'method': 'POST' };
+    const scoreRequest = new Request(url + '/scores/Ball-Game/' + teamName + '/' + playerScore, myInit)  
+    fetch(scoreRequest)
+    console.log('sent to db')
+
+    fetch(new Request(url + '/scores/Ball-Game')).then(response => response.json()).
+    then(json => { 
+        console.log('get from db')
+        checkHighscores(json)
+        
+    })
+
 }
 
 // Socket stuff here
@@ -267,27 +281,31 @@ socket.on('disconnect', () => {
 
 socket.on('created', msg => {
     document.getElementById('roomId').innerHTML = 'Room password: ' + msg
-});
+}); 
 
-socket.on('updatePlayers', msg => {
-    const screen = document.getElementById('playerList');
-    while (screen.hasChildNodes()) {   
-        screen.removeChild(screen.firstChild);
+socket.on('updatePlayers', (msg, joiner) => {
+    if (Object.keys(msg).length < 6) {
+        const screen = document.getElementById('playerList');
+        while (screen.hasChildNodes()) {   
+            screen.removeChild(screen.firstChild);
+        }
+
+        const players = [];
+        for (playa in msg) {
+            players.push(playa);
+        }
+        players.splice(0, 1);
+
+        for (playa in players) {
+            const massage = document.createElement('li');
+            massage.className = 'col-9 offset-1 text-center'
+            massage.innerHTML = 'Player: ' + players[playa];
+            massage.id = playa;        
+            screen.appendChild(massage)
+        }  
+    } else {
+        socket.emit('room full', joiner)
     }
-
-    const players = [];
-    for (playa in msg) {
-        players.push(playa);
-    }
-    players.splice(0, 1);
-
-    for (playa in players) {
-        const massage = document.createElement('li');
-        massage.className = 'col-8 offset-2'
-        massage.innerHTML = 'Player: ' + players[playa];
-        massage.id = playa;        
-        screen.appendChild(massage)
-    }  
 });
 
 socket.on('start game', msg => {
@@ -312,7 +330,7 @@ socket.on('after game', (game, to) => {
 socket.on('submit name', (name) => {
     console.log('name received')
     teamName = name;
-    document.getElementById('team').innerHTML = name
+    document.getElementById('team').innerHTML = 'Team name: ' + name
 });
 
 socket.on('move object', (direction, slow) => {

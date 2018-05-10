@@ -1,7 +1,9 @@
-extends layout
+extends ../layout
 
 block content
-  include includes/preGame
+  include ../includes/preGame
+
+  p(hidden='')#gameName #{game}
 
   .container#gameContent  
     h4.col#screen
@@ -17,13 +19,13 @@ block content
   
           .modal-body#scoreList
             .row
-              h6.text-center.col-12 High Scores: #{game}
+              h6#highScores.text-center.col-12 High Scores: Ball-Game
             .row#scores
               p#name.text-center.col-4.offset-1 Name
               p#score.text-center.col-3 Score
               p#date.text-center.col-4 Date
             
 
-  include includes/scripts
-  script(src='/javascripts/games/game.js')
+  include ../includes/scripts
+  script(src='/javascripts/game1/game.js')
   

@@ -1,0 +1,38 @@
+extends ../layout
+
+block content
+  .container#content
+    h4#game #{game}
+    h5#roomId #{roomId}
+    .row.form-group.mx-auto#nameInput
+      input#modalInput.col-7.form-control(placeholder= 'Team name')
+      button#modalButton.col-4.btn(onclick= 'submitName()') Submit
+   
+    .row
+      button#startGame.btn.btn-dark.col-6.offset-3.col-md-4.offset-md-4 Start game
+
+  .container.controls#game1Controls
+    .row.center-text#directions
+      p#up.d-flex.justify-content-center.col-12.mover.material-icons(style= 'font-size: 150px; padding: 0px') expand_less
+      p#left.d-flex.justify-content-start.col-6.mover.material-icons(style= 'font-size: 150px; padding: 0px') chevron_left
+      p#right.d-flex.justify-content-end.col-6.mover.material-icons(style= 'font-size: 150px; padding: 0px') chevron_right
+      p#down.d-flex.justify-content-center.col-12.mover.material-icons(style= 'font-size: 150px; padding: 0px') expand_more
+
+  #myModal.modal.fade(role='dialog')
+    .modal-dialog.modal-dialog-centered
+      .modal-content
+        .modal-body
+          p#removeMessage
+          button( data-dismiss= 'modal' aria-label= 'Close') Close
+
+  #scoreModal.modal.fade(role='dialog' data-backdrop="static" data-keyboard="false")
+    .modal-dialog.modal-dialog-centered
+      .modal-content
+        .modal-body
+          .row.mx-auto
+            button.col-4.offset-1.btn.btn-dark(data-dismiss= 'modal' aria-label= 'Close' onclick= 'restart()' style= 'padding-left: 2px; padding-right: 2px') New game
+            button.col-4.offset-2.btn.btn-dark(data-dismiss= 'modal' aria-label= 'Close' onclick= 'toLobby()' style= 'padding-left: 2px; padding-right: 2px') Close game
+    
+    include ../includes/scripts
+    script(src='/javascripts/game1/player.js')
+  

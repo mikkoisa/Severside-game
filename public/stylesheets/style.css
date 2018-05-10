@@ -5,6 +5,14 @@ body {
   background-image: url('/images/diamond_upholstery.png')
 }
 
+@media only screen and (max-width: 600px) {
+  body {
+      padding-left: 10px;
+      padding-right: 10px;
+  }
+}
+
+
 a {
   color: #00B7FF;
 }
@@ -20,7 +28,9 @@ canvas {
 }
 
 button {
-  height: 50px
+  height: 50px;
+  padding-left: 2px;
+  padding-right: 2px;
 }
 
 circle {
@@ -92,6 +102,7 @@ li {
   /* border: transparent; */
   height: auto;
   width: auto;
+  color: rgb(187, 185, 185);
 }
 
 #modalButton {

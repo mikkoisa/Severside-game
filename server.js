@@ -94,13 +94,15 @@ io.on('connection', socket => {
     socket.on('disconnect', () => {
         if (socket.id == host) {
             console.log('host disconnected');
-            socket.broadcast.to(room).emit('closeRoom', 'The room has been closed')
+            socket.broadcast.to(room).emit('remove user', 'The room has been closed')
         } else {
             console.log('user disconnected');
             if (io.sockets.adapter.rooms[room]) {
+                socket.leave(room);
                 socket.broadcast.to(room).emit('updatePlayers', io.sockets.adapter.rooms[room].sockets)
             }
-        }   
+        }
+        room = '';   
     });
 
     socket.on('join', (huone) => {
@@ -109,13 +111,17 @@ io.on('connection', socket => {
             socket.join(huone)
             room = huone
             console.log(io.sockets.adapter.rooms[room].sockets)
-            socket.broadcast.to(huone).emit('updatePlayers', io.sockets.adapter.rooms[room].sockets)
+            socket.broadcast.to(huone).emit('updatePlayers', io.sockets.adapter.rooms[room].sockets, socket.id)
         }
     });
 
     socket.on('listUsers', (huone) => {
         console.log('sending list: ' + huone)
         socket.broadcast.to(huone).emit('listPlayers', io.sockets.adapter.rooms[room].sockets);
+    });
+
+    socket.on('room full', (player) => {
+        socket.to(player).emit('remove user', 'The room is full')
     });
 
     socket.on('start game', () => {
@@ -145,5 +151,5 @@ io.on('connection', socket => {
 
 });
 
-DB.connect('mongodb://' + process.env.DB_HOST + ':27017/scores', app);
+DB.connect('mongodb://' + process.env.DB_USER + ':' + process.env.DB_PASS + '@' + process.env.DB_HOST + ':27017/score', app);
 

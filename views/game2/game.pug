@@ -1,0 +1,9 @@
+extends ../layout
+
+block content
+  .container#content
+    h4#game #{game}
+    h5#roomId
+
+  include ../includes/scripts
+  script(src='/javascripts/game2/game.js')
