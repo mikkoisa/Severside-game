@@ -1,4 +1,4 @@
-##Local multiplayer game
+Local multiplayer game
 
 In this application, multiple people in the same location can play games together using their mobile devices as controllers. The games are displayed in a screen, typically the screen of a PC. The players can then join the same game room and play together in the same game. 
 
