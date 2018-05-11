@@ -24,7 +24,7 @@ router.get('/player/:game/:name/:room', (req, res, next) => {
 });
 
 /** 
- * @api {get} scores/:game Request scoreboard
+ * @api {get} /scores/:game Request scoreboard
  * @apiName GetScores
  * @apiGroup Scores
  * @apiParam {String} game Name of game

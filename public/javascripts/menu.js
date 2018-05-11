@@ -6,3 +6,4 @@ $('button').on("click", (e) => {
     window.location.href = 'lobby/' + e.currentTarget.id + '/' + e.currentTarget.innerText
 });
 
+
